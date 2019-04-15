@@ -1,12 +1,14 @@
 package com.company;
 
 import java.io.IOException;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) {
-	    Controller controller = new Controller("name1");
+		Random rand = new Random();
+	    Controller controller = new Controller("name" + rand.nextInt());
 	    while(true){
 			Scanner sc = new Scanner(System.in);
 			String command = sc.nextLine();
@@ -20,7 +22,7 @@ public class Main {
 
 			}else if(splitStrings[0].equals("delete") ){
 
-				controller.delete(Float.parseFloat(splitStrings[1]));
+				controller.deleteLocal(Float.parseFloat(splitStrings[1]));
 			}
 			controller.printDocument();
 

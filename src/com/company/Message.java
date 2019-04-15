@@ -6,6 +6,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 
+import static com.company.Controller.deleteRemote;
 import static com.company.Controller.insertRemote;
 
 
@@ -21,7 +22,7 @@ public class Message implements Runnable{
 		InetAddress group=InetAddress.getByName("230.0.0.0");
 		socket.joinGroup(group);
 		while(true){
-			System.out.println("Waiting for multicast message...");
+//			System.out.println("Waiting for multicast message...");
 			DatagramPacket packet=new DatagramPacket(buffer,
 			  buffer.length);
 			socket.receive(packet);
@@ -29,8 +30,16 @@ public class Message implements Runnable{
 				ObjectInputStream iStream = new ObjectInputStream(new ByteArrayInputStream(packet.getData()));
 				BroadcastPacket messageClass = (BroadcastPacket) iStream.readObject();
 				iStream.close();
-				System.out.println(messageClass);
-				insertRemote(messageClass);
+//				System.out.println(messageClass);
+				if(!messageClass.getId().equals(Controller.id) ){
+					if(messageClass.getOperation() == 'i'){
+						insertRemote(messageClass);
+					}else if(messageClass.getOperation() == 'd'){
+						deleteRemote(messageClass);
+					}
+
+				}
+
 
 			}
 			catch (Exception e){

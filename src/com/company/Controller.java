@@ -6,7 +6,7 @@ import static com.company.Message.broadcast;
 
 public class Controller {
 	private static CRDT crdt;
-	public String id;
+	public static String id;
 	public Message message;
 	public Controller(String id) {
 		this.crdt = new CRDT();
@@ -22,10 +22,13 @@ public class Controller {
 	public static void insertRemote(BroadcastPacket packet){
 		crdt.insert(packet.getId(),packet.getValue(),packet.getPosition());
 	}
-	public void delete(float position){
+	public void deleteLocal(float position){
 		crdt.delete(id,position);
 	}
 
+	public static void deleteRemote(BroadcastPacket packet){
+		crdt.delete(id,packet.getPosition());
+	}
 	public void printDocument(){
 		crdt.print();
 		System.out.println();
