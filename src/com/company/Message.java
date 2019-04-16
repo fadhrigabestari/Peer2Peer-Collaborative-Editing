@@ -18,11 +18,10 @@ public class Message implements Runnable{
 	public void receiveUDPMessage(String ip, int port) throws
 	  IOException {
 		byte[] buffer=new byte[1024];
-		MulticastSocket socket=new MulticastSocket(4321);
-		InetAddress group=InetAddress.getByName("230.0.0.0");
+		MulticastSocket socket=new MulticastSocket(port);
+		InetAddress group=InetAddress.getByName(ip);
 		socket.joinGroup(group);
 		while(true){
-//			System.out.println("Waiting for multicast message...");
 			DatagramPacket packet=new DatagramPacket(buffer,
 			  buffer.length);
 			socket.receive(packet);
@@ -30,7 +29,6 @@ public class Message implements Runnable{
 				ObjectInputStream iStream = new ObjectInputStream(new ByteArrayInputStream(packet.getData()));
 				BroadcastPacket messageClass = (BroadcastPacket) iStream.readObject();
 				iStream.close();
-//				System.out.println(messageClass);
 				if(!messageClass.getId().equals(Controller.id) ){
 					if(messageClass.getOperation() == 'i'){
 						insertRemote(messageClass);

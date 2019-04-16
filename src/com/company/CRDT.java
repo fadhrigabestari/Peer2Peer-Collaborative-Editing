@@ -6,6 +6,8 @@ import java.util.Comparator;
 import static java.lang.Math.round;
 
 public class CRDT {
+
+
 	private ArrayList<Character> document;
 	private static int counter = 0;
 
@@ -13,33 +15,36 @@ public class CRDT {
 		this.document = new ArrayList<Character>();
 	}
 
-	public void insert(String id, char value, float position){
-		counter++;
-		document.add(new Character(id,value,convertPositionToList(position)));
+	public ArrayList<Character> getDocument() {
+		return document;
 	}
-	public void delete(String id, float position){
+
+	public void setDocument(ArrayList<Character> document) {
+		this.document = document;
+	}
+	public void insert(String id, char value, ArrayList<Integer> position){
+		counter++;
+		document.add(new Character(id,value,position));
+	}
+	public void delete( int idx){
 		//Character c = new Character(id,value,position);
 		//document.remove(c);
-		ArrayList<Integer> pos = convertPositionToList(position);
-		int i;
-		for(i = 0; i < document.size(); i++){
-			if(this.document.get(i).getPosition().equals(pos)){
-				break;
-			}
-		}
-		document.remove(i);
+//		ArrayList<Integer> pos = convertPositionToList(position);
+//		int i;
+//		for(i = 0; i < document.size(); i++){
+//			if(this.document.get(i).getPosition().equals(pos)){
+//				break;
+//			}
+//		}
+		document.remove(idx);
 	}
 	public void update(){}
 
 	public void print(){
-		Collections.sort(this.document, new Comparator<Character>() {
-			@Override
-			public int compare(Character c1, Character c2) {
-				return c1.compareTo(c2);
-			}
-		});
+		sort();
 		for(int i = 0; i < document.size(); i++){
-			System.out.print(document.get(i).getValue());
+			System.out.println(document.get(i).getValue());
+			System.out.println(document.get(i).getPosition());
 		}
 	}
 	public ArrayList<Integer> convertPositionToList(Float pos){
@@ -52,6 +57,26 @@ public class CRDT {
 		}
 
 		return position;
+	}
+	public void sort(){
+		Collections.sort(this.document, new Comparator<Character>() {
+			@Override
+			public int compare(Character c1, Character c2) {
+				return c1.compareTo(c2);
+			}
+		});
+	}
+	public Character get(int index){
+		return document.get(index);
+	}
+	public int find(ArrayList<Integer> pos){
+		int i;
+		for(i = 0; i < document.size(); i++){
+			if(this.document.get(i).getPosition().equals(pos)){
+				break;
+			}
+		}
+		return  i;
 	}
 
 }
