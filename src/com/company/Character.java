@@ -1,5 +1,7 @@
 package com.company;
 
+import org.omg.PortableInterceptor.INACTIVE;
+
 import java.util.ArrayList;
 
 public class Character {
@@ -38,7 +40,36 @@ public class Character {
 	}
 
 	public int compareTo(Character c){
-		return Float.compare(convertPositionToFloat(this.position), convertPositionToFloat(c.position));
+		int sizePosition = this.getPosition().size();
+		int sizeOtherPosition = c.getPosition().size();
+		ArrayList<Integer> position = this.getPosition();
+		ArrayList<Integer> otherPosition = c.getPosition();
+		if(sizePosition < sizeOtherPosition){
+//			System.out.println("other");
+			for(int i = 0 ; i < sizePosition;i++){
+				if(!position.get(i).equals(otherPosition.get(i))){
+					return Integer.compare(position.get(i),otherPosition.get(i));
+				}
+			}
+			return -1;
+		}else if(sizePosition > sizeOtherPosition){
+//			System.out.println("self");
+			for(int i = 0 ; i < sizeOtherPosition;i++){
+				if(!position.get(i).equals(otherPosition.get(i)) ){
+					return Integer.compare(position.get(i),otherPosition.get(i));
+				}
+			}
+			return 1;
+		}else{
+//			System.out.println("equal");
+			for(int i = 0 ; i < sizeOtherPosition;i++){
+				if(!position.get(i).equals(otherPosition.get(i))){
+
+					return Integer.compare(position.get(i),otherPosition.get(i));
+				}
+			}
+			return 0;
+		}
 	}
 	public float convertPositionToFloat(ArrayList<Integer> position){
 		float pos = 0;
@@ -48,5 +79,19 @@ public class Character {
 			divide *= 10;
 		}
 		return pos;
+	}
+
+	public static void main(String[] args) {
+		ArrayList<Integer> t1 = new ArrayList<>();
+		ArrayList<Integer> t2 = new ArrayList<>();
+		t1.add(0);
+		t1.add(999);
+		t1.add(1);
+		Character c = new Character("a",'c',0,t1);
+		t2.add(0);
+		t2.add(999);
+		Character c2 = new Character("a",'c',0,t2);
+		System.out.println(t1.size() + " " + t2.size());
+		System.out.println(c.compareTo(c2));
 	}
 }

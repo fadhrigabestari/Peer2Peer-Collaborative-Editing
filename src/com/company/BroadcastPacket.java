@@ -1,14 +1,15 @@
 package com.company;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class BroadcastPacket implements Serializable {
 	private String id;
 	private char value;
 	private char operation; // 'i' for insert 'd' for delete
-	private float position;
+	private ArrayList<Integer> position;
 
-	public BroadcastPacket(String id, char value, char operation, float position) {
+	public BroadcastPacket(String id, char value, char operation, ArrayList<Integer>  position) {
 		this.id = id;
 		this.value = value;
 		this.operation = operation;
@@ -39,11 +40,11 @@ public class BroadcastPacket implements Serializable {
 		this.operation = operation;
 	}
 
-	public float getPosition() {
+	public ArrayList<Integer>  getPosition() {
 		return position;
 	}
 
-	public void setPosition(float position) {
+	public void setPosition(ArrayList<Integer>  position) {
 		this.position = position;
 	}
 
