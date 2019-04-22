@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class Character {
 	private String siteId;
 	private char value;
-	private int counter;
+	public int counter;
 	private ArrayList<Integer> position;
 
 	public Character(String siteId, char value, int counter, ArrayList<Integer> position) {

@@ -1,5 +1,6 @@
 package com.company;
 
+import java.awt.image.AreaAveragingScaleFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -10,7 +11,8 @@ public class Controller {
 	public static String id;
 	public Message message;
 	private static TextEditor textEditor;
-	public static VersionVector v;
+	public static ArrayList<VersionVectorPacket> vectorVersion;
+	public static ArrayList<DeletionBufferPacket> delBuffer;
 
 	public Controller(String id) {
 		this.crdt = new CRDT();
@@ -18,14 +20,19 @@ public class Controller {
 		Thread t=new Thread(new Message());
 		t.start();
 		textEditor = new TextEditor();
-		v = new VersionVector(this.id);
+		vectorVersion = new ArrayList<>();
+		delBuffer = new ArrayList<>();
 	}
 
 	public static void insertLocal(char c, int index) throws IOException {
 		ArrayList<Integer> position = createPosition(index);
+		System.out.println(position);
 		crdt.insert(id,c,position);
-		v.insert(c, 'i', crdt.counter);
-		System.out.println(v.toString());
+
+		VersionVectorPacket v = new VersionVectorPacket(id, c ,'i', crdt.counter);
+		vectorVersion.add(v);
+
+		System.out.println(vectorVersion.toString());
 		BroadcastPacket packet = new BroadcastPacket(id,c,'i',position);
 		broadcast(packet);
 		printDocument();
@@ -84,32 +91,46 @@ public class Controller {
 	public static void insertRemote(BroadcastPacket packet){
 		System.out.println(packet);
 		crdt.insert(packet.getId(),packet.getValue(),packet.getPosition());
+
+		VersionVectorPacket v = new VersionVectorPacket(id, packet.getValue(), 'i', crdt.counter);
+		vectorVersion.add(v);
+
 		updateTextEditor();
 		printDocument();
 	}
 	public static void deleteLocal(int idx) throws IOException{
 		Character c = crdt.get(idx);
-		crdt.delete(idx);
-		BroadcastPacket packet = new BroadcastPacket(id,c.getValue(),'d',c.getPosition());
-		System.out.println(packet);
-		broadcast(packet);
-		System.out.println(packet);
-		printDocument();
+		DeletionBufferPacket d = new DeletionBufferPacket(id, c.getValue(), crdt.counter, c.getPosition());
+		delBuffer.add(d);
+
+//		crdt.delete(idx);
+//		BroadcastPacket packet = new BroadcastPacket(id,c.getValue(),'d',c.getPosition());
+//		System.out.println(packet);
+//		broadcast(packet);
+//		System.out.println(packet);
+//		printDocument();
 	}
 
 	public static void deleteRemote(BroadcastPacket packet){
 		System.out.println(packet);
-		int idx = crdt.find(packet.getPosition());
-		System.out.println(idx);
-		crdt.delete(idx);
-		updateTextEditor();
-		printDocument();
+		DeletionBufferPacket d = new DeletionBufferPacket(id, packet.getValue(), crdt.counter, packet.getPosition());
+		delBuffer.add(d);
+//		int idx = crdt.find(packet.getPosition());
+//		System.out.println(idx);
+//		crdt.delete(idx);
+//		updateTextEditor();
+//		printDocument();
+	}
+
+	public void deleteCRDT(){
 
 	}
+
 	public static void printDocument(){
 //		crdt.print();
 //		System.out.println();
 	}
+
 	public static void updateTextEditor(){
 		crdt.sort();
 		textEditor.update(crdt.getDocument());
