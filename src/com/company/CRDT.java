@@ -76,6 +76,7 @@ public class CRDT {
 				break;
 			}
 		}
+		System.out.println(i);
 		return  i;
 	}
 

@@ -77,14 +77,16 @@ public class Controller {
 	}
 
 	public static void deleteRemote(BroadcastPacket packet){
+		System.out.println(packet.getValue());
+		System.out.println(packet.getPosition());
 		int idx = crdt.find(packet.getPosition());
 		crdt.delete(idx);
 		updateTextEditor();
 		printDocument();
 	}
 	public static void printDocument(){
-		crdt.print();
-		System.out.println();
+//		crdt.print();
+//		System.out.println();
 	}
 	public static void updateTextEditor(){
 		crdt.sort();

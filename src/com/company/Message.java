@@ -15,6 +15,7 @@ public class Message implements Runnable{
 	public static void broadcast(BroadcastPacket msg) throws IOException{
 		sendUDPMessage(msg, "230.0.0.0", 4321);
 	}
+
 	public void receiveUDPMessage(String ip, int port) throws
 	  IOException {
 		byte[] buffer=new byte[1024];
@@ -42,6 +43,7 @@ public class Message implements Runnable{
 			}
 			catch (Exception e){
 				System.out.println("error");
+				System.out.println(e.toString());
 				break;
 			}
 
