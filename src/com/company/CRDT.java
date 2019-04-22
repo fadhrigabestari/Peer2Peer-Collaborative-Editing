@@ -9,7 +9,7 @@ public class CRDT {
 
 
 	private ArrayList<Character> document;
-	private static int counter = 0;
+	public static int counter = 0;
 
 	public CRDT() {
 		this.document = new ArrayList<Character>();
@@ -76,6 +76,7 @@ public class CRDT {
 				break;
 			}
 		}
+		System.out.println(i);
 		return  i;
 	}
 

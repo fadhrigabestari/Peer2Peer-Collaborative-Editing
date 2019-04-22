@@ -10,19 +10,24 @@ public class Controller {
 	public static String id;
 	public Message message;
 	private static TextEditor textEditor;
+	public static VersionVector v;
+
 	public Controller(String id) {
 		this.crdt = new CRDT();
 		this.id = id;
 		Thread t=new Thread(new Message());
 		t.start();
 		textEditor = new TextEditor();
+		v = new VersionVector(this.id);
 	}
+
 	public static void insertLocal(char c, int index) throws IOException {
 		ArrayList<Integer> position = createPosition(index);
 		crdt.insert(id,c,position);
+		v.insert(c, 'i', crdt.counter);
+		System.out.println(v.toString());
 		BroadcastPacket packet = new BroadcastPacket(id,c,'i',position);
 		broadcast(packet);
-		System.out.println("ins local" + packet);
 		printDocument();
 	}
 
@@ -47,7 +52,7 @@ public class Controller {
 //			System.out.println("last");
 			position.add(index + 1);
 		}else{
-			System.out.println("between");
+//			System.out.println("between");
 			ArrayList<Integer> prevPosition = crdt.getDocument().get(index - 1).getPosition();
 			ArrayList<Integer> nextPosition = crdt.getDocument().get(index).getPosition();
 

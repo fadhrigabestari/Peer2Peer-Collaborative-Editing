@@ -78,6 +78,7 @@ public class TextEditor extends JPanel  {
 //			System.out.println(e.getDot() + " " + e.getMark());
 //			System.out.println(operation + " " + e.getDot());
 
+
 			pointer = e.getDot();
 
 
