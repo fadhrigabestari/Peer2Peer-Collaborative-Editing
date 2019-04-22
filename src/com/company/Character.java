@@ -15,7 +15,7 @@ public class Character {
 		this.position = position;
 	}
 
-	public Character(String siteId, char value, ArrayList<Integer> position) {
+	public Character(String siteId, char value, ArrayList<Integer> position){
 		this.siteId = siteId;
 		this.value = value;
 		this.position = position;

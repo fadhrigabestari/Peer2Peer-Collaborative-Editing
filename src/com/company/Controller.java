@@ -10,16 +10,22 @@ public class Controller {
 	public static String id;
 	public Message message;
 	private static TextEditor textEditor;
+	public static VersionVector v;
+
 	public Controller(String id) {
 		this.crdt = new CRDT();
 		this.id = id;
 		Thread t=new Thread(new Message());
 		t.start();
 		textEditor = new TextEditor();
+		v = new VersionVector(this.id);
 	}
+
 	public static void insertLocal(char c, int index) throws IOException {
 		ArrayList<Integer> position = createPosition(index);
 		crdt.insert(id,c,position);
+		v.insert(c, 'i', crdt.counter);
+		System.out.println(v.toString());
 		BroadcastPacket packet = new BroadcastPacket(id,c,'i',position);
 		broadcast(packet);
 		printDocument();
@@ -85,8 +91,8 @@ public class Controller {
 		printDocument();
 	}
 	public static void printDocument(){
-//		crdt.print();
-//		System.out.println();
+		crdt.print();
+		System.out.println();
 	}
 	public static void updateTextEditor(){
 		crdt.sort();
