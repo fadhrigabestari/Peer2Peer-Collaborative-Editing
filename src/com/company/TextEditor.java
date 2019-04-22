@@ -17,6 +17,7 @@ public class TextEditor extends JPanel  {
 	JTextArea textArea;
 	JFrame frame;
 	char operation;
+	int pointer;
 
 	public TextEditor() {
 		frame = new JFrame("editor");
@@ -40,12 +41,24 @@ public class TextEditor extends JPanel  {
 
 		public void insertUpdate(DocumentEvent e) {
 			operation = 'i';
+			System.out.println(pointer);
+			try {
+				insertLocal(textArea.getText().charAt(pointer), pointer);
+
+			} catch (IOException err){
+				System.out.println(err);
+			}
 
 		}
 
 		public void removeUpdate(DocumentEvent e) {
 //			updateLog(e, "removed from" + textArea.getText().charAt(pointer - 1));
 			operation = 'd';
+			try{
+				deleteLocal(pointer - 1);
+			}catch (IOException err){
+				System.out.println(err);
+			}
 
 		}
 
@@ -65,30 +78,8 @@ public class TextEditor extends JPanel  {
 //			System.out.println(e.getDot() + " " + e.getMark());
 //			System.out.println(operation + " " + e.getDot());
 
+			pointer = e.getDot();
 
-
-			if(operation == 'i'){
-				int pointer = e.getDot() - 1;
-				if(e.getDot() != 0) {
-					try {
-						insertLocal(textArea.getText().charAt(pointer), pointer);
-						operation = ' ';
-					} catch (IOException err){
-
-					}
-				}
-
-			}else if(operation == 'd'){
-				int pointer = e.getDot();
-//				System.out.println(pointer);
-				try{
-					deleteLocal(pointer);
-				}catch (IOException err){
-
-				}
-
-				operation = ' ';
-			}
 
 		}
 	}

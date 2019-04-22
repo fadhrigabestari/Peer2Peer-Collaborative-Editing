@@ -41,7 +41,7 @@ public class Message implements Runnable{
 
 			}
 			catch (Exception e){
-				System.out.println("error");
+				System.out.println(e);
 				break;
 			}
 

@@ -22,6 +22,7 @@ public class Controller {
 		crdt.insert(id,c,position);
 		BroadcastPacket packet = new BroadcastPacket(id,c,'i',position);
 		broadcast(packet);
+		System.out.println("ins local" + packet);
 		printDocument();
 	}
 
@@ -46,15 +47,27 @@ public class Controller {
 //			System.out.println("last");
 			position.add(index + 1);
 		}else{
-//			System.out.println("between");
+			System.out.println("between");
 			ArrayList<Integer> prevPosition = crdt.getDocument().get(index - 1).getPosition();
 			ArrayList<Integer> nextPosition = crdt.getDocument().get(index).getPosition();
-			for(int i = 0 ; i < prevPosition.size(); i++){
-				position.add(prevPosition.get(i));
-			}
+
 			if(prevPosition.size() == nextPosition.size()){
+				for(int i = 0 ; i < prevPosition.size(); i++){
+					position.add(prevPosition.get(i));
+				}
 				position.add(1);
-			}else{
+			}else if(prevPosition.size() < nextPosition.size()){
+				for(int i = 0 ; i < nextPosition.size(); i++){
+					position.add(nextPosition.get(i));
+				}
+				int lastIdx = nextPosition.size() - 1;
+				position.set(lastIdx, nextPosition.get(lastIdx) - 1 );
+				position.add(999);
+			}
+			else{
+				for(int i = 0 ; i < prevPosition.size(); i++){
+					position.add(prevPosition.get(i));
+				}
 				int lastIdx = prevPosition.size() - 1;
 				position.set(lastIdx, prevPosition.get(lastIdx) + 1 );
 			}
@@ -64,6 +77,7 @@ public class Controller {
 	}
 
 	public static void insertRemote(BroadcastPacket packet){
+		System.out.println(packet);
 		crdt.insert(packet.getId(),packet.getValue(),packet.getPosition());
 		updateTextEditor();
 		printDocument();
@@ -72,19 +86,24 @@ public class Controller {
 		Character c = crdt.get(idx);
 		crdt.delete(idx);
 		BroadcastPacket packet = new BroadcastPacket(id,c.getValue(),'d',c.getPosition());
+		System.out.println(packet);
 		broadcast(packet);
+		System.out.println(packet);
 		printDocument();
 	}
 
 	public static void deleteRemote(BroadcastPacket packet){
+		System.out.println(packet);
 		int idx = crdt.find(packet.getPosition());
+		System.out.println(idx);
 		crdt.delete(idx);
 		updateTextEditor();
 		printDocument();
+
 	}
 	public static void printDocument(){
-		crdt.print();
-		System.out.println();
+//		crdt.print();
+//		System.out.println();
 	}
 	public static void updateTextEditor(){
 		crdt.sort();
