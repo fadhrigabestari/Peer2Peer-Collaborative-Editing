@@ -91,7 +91,6 @@ public class Controller {
 		Character c = crdt.get(idx);
 		crdt.delete(idx);
 		BroadcastPacket packet = new BroadcastPacket(id,c.getValue(),'d',c.getPosition());
-		System.out.println(packet);
 		broadcast(packet);
 		System.out.println(packet);
 		printDocument();

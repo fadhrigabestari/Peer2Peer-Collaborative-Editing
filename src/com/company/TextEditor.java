@@ -22,9 +22,9 @@ public class TextEditor extends JPanel  {
 	public TextEditor() {
 		frame = new JFrame("editor");
 		textArea = new JTextArea();
-		textArea.addCaretListener(new CaretListener());
-		textArea.getDocument().addDocumentListener(new MyDocumentListener());
 
+		textArea.getDocument().addDocumentListener(new MyDocumentListener());
+        textArea.addCaretListener(new CaretListener());
 		frame.add(textArea);
 		frame.setSize(500, 500);
 		frame.show();
@@ -42,23 +42,23 @@ public class TextEditor extends JPanel  {
 		public void insertUpdate(DocumentEvent e) {
 			operation = 'i';
 			System.out.println(pointer);
-			try {
-				insertLocal(textArea.getText().charAt(pointer), pointer);
-
-			} catch (IOException err){
-				System.out.println(err);
-			}
+//			try {
+//				insertLocal(textArea.getText().charAt(pointer), pointer);
+//
+//			} catch (IOException err){
+//				System.out.println(err);
+//			}
 
 		}
 
 		public void removeUpdate(DocumentEvent e) {
 //			updateLog(e, "removed from" + textArea.getText().charAt(pointer - 1));
 			operation = 'd';
-			try{
-				deleteLocal(pointer - 1);
-			}catch (IOException err){
-				System.out.println(err);
-			}
+//			try{
+//				deleteLocal(pointer - 1);
+//			}catch (IOException err){
+//				System.out.println(err);
+//			}
 
 		}
 
@@ -79,7 +79,30 @@ public class TextEditor extends JPanel  {
 //			System.out.println(operation + " " + e.getDot());
 
 
-			pointer = e.getDot();
+//			pointer = e.getDot();
+			if(operation == 'i'){
+				int pointer = e.getDot() - 1;
+				if(e.getDot() != 0) {
+					try {
+						insertLocal(textArea.getText().charAt(pointer), pointer);
+						operation = ' ';
+					} catch (IOException err){
+						System.out.println(err);
+					}
+				}
+
+			}else if(operation == 'd'){
+				int pointer = e.getDot();
+//				System.out.println(pointer);
+				try{
+					deleteLocal(pointer);
+				}catch (IOException err){
+					System.out.println(err);
+				}
+
+				operation = ' ';
+			}
+
 
 
 		}
