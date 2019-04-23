@@ -40,9 +40,8 @@ public class Controller {
 		}
 
 		System.out.println(vectorVersion.toString());
-		BroadcastPacket packet = new BroadcastPacket(id, id, c,'i',position);
+		BroadcastPacket packet = new BroadcastPacket(id, id, c,'i',position, crdt.counter, crdt.counter);
 		broadcast(packet);
-		updateTextEditor();
 		printDocument();
 	}
 
@@ -99,7 +98,7 @@ public class Controller {
 	public static void insertRemote(BroadcastPacket packet){
 		System.out.println(packet);
 		crdt.insert(packet.getId(),packet.getValue(),packet.getPosition());
-		HashMap<String, Integer> v = new HashMap<>();
+		HashMap<String, Integer> v;
 
 		v = vectorVersion.getVersion();
 
@@ -109,6 +108,21 @@ public class Controller {
 			vectorVersion.increment(packet.getId());
 		}
 
+		ArrayList<DeletionBufferPacket> deleted = new ArrayList<DeletionBufferPacket>();
+		for (DeletionBufferPacket d: delBuffer) {
+			if (v.get(d.getId()) >= d.getCounter()) {
+				int idx = crdt.find(d.getCharacter().getPosition());
+				crdt.delete(idx);
+				deleted.add(d);
+			}
+
+			vectorVersion.increment(d.getId());
+		}
+
+		for (DeletionBufferPacket d: deleted) {
+			delBuffer.remove(d);
+		}
+
 		updateTextEditor();
 		printDocument();
 	}
@@ -116,8 +130,8 @@ public class Controller {
 	public static void deleteLocal(int idx) throws IOException{
 		Character c = crdt.get(idx);
 		crdt.delete(idx);
-		BroadcastPacket packet = new BroadcastPacket(id, c.getSiteId(),c.getValue(),'d',c.getPosition());
-		HashMap<String, Integer> v = new HashMap<>();
+		BroadcastPacket packet = new BroadcastPacket(id, c.getSiteId(),c.getValue(),'d',c.getPosition(), c.getCounter(), crdt.counter);
+		HashMap<String, Integer> v;
 		v = vectorVersion.getVersion();
 
 		if (v.get(id) == null){
@@ -125,32 +139,44 @@ public class Controller {
 		} else {
 			vectorVersion.increment(id);
 		}
+
 		broadcast(packet);
-		updateTextEditor();
 		printDocument();
 	}
 
 	public static void deleteRemote(BroadcastPacket packet){
 		System.out.println(packet);
+		HashMap<String, Integer> v = vectorVersion.getVersion();
+		Character character = new Character(packet.getSiteId(), packet.getValue(), packet.getCounter(), packet.getPosition());
+
 		if (vectorVersion.getCounter(packet.getId()) < crdt.counter){
-			DeletionBufferPacket d = new DeletionBufferPacket(id, packet.getValue(), crdt.counter, packet.getPosition());
+			DeletionBufferPacket d = new DeletionBufferPacket(id, crdt.counter, character);
 			delBuffer.add(d);
-
-//			wait for insert and then delete
 		} else {
-			// hehehe
+			int idx = crdt.find(packet.getPosition());
+			System.out.println(idx);
+			crdt.delete(idx);
+
+			if (v.get(id) == null){
+				vectorVersion.add(packet.getId(), crdt.counter);
+			} else {
+				vectorVersion.increment(packet.getId());
+			}
 		}
-		int idx = crdt.find(packet.getPosition());
-		System.out.println(idx);
-		crdt.delete(idx);
 
-		HashMap<String, Integer> v = new HashMap<>();
-		v = vectorVersion.getVersion();
+		ArrayList<DeletionBufferPacket> deleted = new ArrayList<DeletionBufferPacket>();
+		for (DeletionBufferPacket d: delBuffer) {
+			if (v.get(d.getId()) >= d.getCounter()) {
+				int idx = crdt.find(d.getCharacter().getPosition());
+				crdt.delete(idx);
+				deleted.add(d);
+			}
 
-		if (v.get(id) == null){
-			vectorVersion.add(packet.getId(), crdt.counter);
-		} else {
-			vectorVersion.increment(packet.getId());
+			vectorVersion.increment(d.getId());
+		}
+
+		for (DeletionBufferPacket d: deleted) {
+			delBuffer.remove(d);
 		}
 
 		updateTextEditor();

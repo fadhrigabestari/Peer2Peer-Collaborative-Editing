@@ -9,13 +9,17 @@ public class BroadcastPacket implements Serializable {
 	private char value;
 	private char operation; // 'i' for insert 'd' for delete
 	private ArrayList<Integer> position;
+	private int counter;
+	private int siteCounter;
 
-	public BroadcastPacket(String id, String siteId, char value, char operation, ArrayList<Integer>  position) {
+	public BroadcastPacket(String id, String siteId, char value, char operation, ArrayList<Integer>  position, int counter, int siteCounter) {
 		this.id = id;
 		this.siteId = siteId;
 		this.value = value;
 		this.operation = operation;
 		this.position = position;
+		this.counter = counter;
+		this.siteCounter = siteCounter;
 	}
 
 	public String getId() {
@@ -54,6 +58,22 @@ public class BroadcastPacket implements Serializable {
 		this.position = position;
 	}
 
+	public int getCounter() {
+		return counter;
+	}
+
+	public void setCounter(int counter) {
+		this.counter = counter;
+	}
+
+	public int getSiteCounter() {
+		return siteCounter;
+	}
+
+	public void setSiteCounter(int siteCounter) {
+		this.siteCounter = siteCounter;
+	}
+
 	@Override
 	public String toString() {
 		return "BroadcastPacket{" +
@@ -62,6 +82,7 @@ public class BroadcastPacket implements Serializable {
 		  ", value=" + value +
 		  ", operation=" + operation +
 		  ", position=" + position +
+		  ", counter=" + counter +
 		  '}';
 	}
 }

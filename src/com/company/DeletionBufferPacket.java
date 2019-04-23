@@ -5,15 +5,13 @@ import java.util.*;
 
 public class DeletionBufferPacket {
     private String id;
-    private char value;
     private int counter;
-    private ArrayList<Integer> position;
+    private Character character;
 
-    public DeletionBufferPacket(String id, char value, int counter, ArrayList<Integer> position) {
+    public DeletionBufferPacket(String id, int counter, Character character) {
         this.id = id;
-        this.value = value;
         this.counter = counter;
-        this.position = position;
+        this.character = character;
     }
 
     public String getId() {
@@ -24,14 +22,6 @@ public class DeletionBufferPacket {
         this.id = id;
     }
 
-    public char getValue() {
-        return value;
-    }
-
-    public void setValue(char value) {
-        this.value = value;
-    }
-
     public int getCounter() {
         return counter;
     }
@@ -40,11 +30,11 @@ public class DeletionBufferPacket {
         this.counter = counter;
     }
 
-    public ArrayList<Integer> getPosition() {
-        return position;
+    public Character getCharacter() {
+        return character;
     }
 
-    public void setPosition(ArrayList<Integer> position) {
-        this.position = position;
+    public void setCharacter(Character character) {
+        this.character = character;
     }
 }

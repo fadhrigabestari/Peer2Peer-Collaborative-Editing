@@ -30,6 +30,14 @@ public class Character {
 		return value;
 	}
 
+	public int getCounter() {
+		return counter;
+	}
+
+	public void setCounter(int counter) {
+		this.counter = counter;
+	}
+
 	public ArrayList<Integer> getPosition() {
 		return position;
 	}
