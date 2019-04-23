@@ -40,7 +40,7 @@ public class Controller {
 		}
 
 		System.out.println(vectorVersion.toString());
-		BroadcastPacket packet = new BroadcastPacket(id,c,'i',position);
+		BroadcastPacket packet = new BroadcastPacket(id, id, c,'i',position);
 		broadcast(packet);
 		printDocument();
 	}
@@ -115,7 +115,7 @@ public class Controller {
 	public static void deleteLocal(int idx) throws IOException{
 		Character c = crdt.get(idx);
 		crdt.delete(idx);
-		BroadcastPacket packet = new BroadcastPacket(c.getSiteId(),c.getValue(),'d',c.getPosition());
+		BroadcastPacket packet = new BroadcastPacket(id, c.getSiteId(),c.getValue(),'d',c.getPosition());
 		HashMap<String, Integer> v = new HashMap<>();
 		v = vectorVersion.getVersion();
 

@@ -22,16 +22,16 @@ public class Character {
 		this.position = position;
 	}
 
+	public String getSiteId() { return siteId; }
+
+	public void setSiteId(String siteId) { this.siteId = siteId; }
+
 	public char getValue() {
 		return value;
 	}
 
 	public ArrayList<Integer> getPosition() {
 		return position;
-	}
-
-	public String getSiteId() {
-		return siteId;
 	}
 
 	public void setPosition(ArrayList<Integer> position) {

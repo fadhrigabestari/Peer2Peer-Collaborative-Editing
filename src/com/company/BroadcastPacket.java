@@ -5,12 +5,14 @@ import java.util.ArrayList;
 
 public class BroadcastPacket implements Serializable {
 	private String id;
+	private String siteId;
 	private char value;
 	private char operation; // 'i' for insert 'd' for delete
 	private ArrayList<Integer> position;
 
-	public BroadcastPacket(String id, char value, char operation, ArrayList<Integer>  position) {
+	public BroadcastPacket(String id, String siteId, char value, char operation, ArrayList<Integer>  position) {
 		this.id = id;
+		this.siteId = siteId;
 		this.value = value;
 		this.operation = operation;
 		this.position = position;
@@ -23,6 +25,10 @@ public class BroadcastPacket implements Serializable {
 	public void setId(String id) {
 		this.id = id;
 	}
+
+	public String getSiteId() { return siteId; }
+
+	public void setSiteId(String siteId) { this.siteId = siteId; }
 
 	public char getValue() {
 		return value;
@@ -52,6 +58,7 @@ public class BroadcastPacket implements Serializable {
 	public String toString() {
 		return "BroadcastPacket{" +
 		  "id='" + id + '\'' +
+		  ", siteId=" + siteId +
 		  ", value=" + value +
 		  ", operation=" + operation +
 		  ", position=" + position +
