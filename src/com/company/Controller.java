@@ -42,6 +42,7 @@ public class Controller {
 		System.out.println(vectorVersion.toString());
 		BroadcastPacket packet = new BroadcastPacket(id,c,'i',position);
 		broadcast(packet);
+		updateTextEditor();
 		printDocument();
 	}
 
@@ -125,7 +126,7 @@ public class Controller {
 			vectorVersion.increment(id);
 		}
 		broadcast(packet);
-
+		updateTextEditor();
 		printDocument();
 	}
 
