@@ -72,11 +72,10 @@ public class CRDT {
 		int i;
 		for(i = 0; i < document.size(); i++){
 			if(this.document.get(i).getPosition().equals(pos)){
-				break;
+				return  i;
 			}
 		}
-		System.out.println(i);
-		return  i;
+		return document.size() - 1;
 	}
 
 }
