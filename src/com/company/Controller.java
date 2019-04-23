@@ -3,6 +3,7 @@ package com.company;
 import java.awt.image.AreaAveragingScaleFilter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static com.company.Message.broadcast;
 
@@ -11,7 +12,7 @@ public class Controller {
 	public static String id;
 	public Message message;
 	private static TextEditor textEditor;
-	public static ArrayList<VersionVectorPacket> vectorVersion;
+	public static VersionVectorPacket vectorVersion;
 	public static ArrayList<DeletionBufferPacket> delBuffer;
 
 	public Controller(String id) {
@@ -20,7 +21,7 @@ public class Controller {
 		Thread t=new Thread(new Message());
 		t.start();
 		textEditor = new TextEditor();
-		vectorVersion = new ArrayList<>();
+		vectorVersion = new VersionVectorPacket();
 		delBuffer = new ArrayList<>();
 	}
 
@@ -29,8 +30,14 @@ public class Controller {
 		System.out.println(position);
 		crdt.insert(id,c,position);
 
-		VersionVectorPacket v = new VersionVectorPacket(id, c ,'i', crdt.counter);
-		vectorVersion.add(v);
+		HashMap<String, Integer> v = new HashMap<>();
+		v = vectorVersion.getVersion();
+
+		if (v.get(id) == null){
+			vectorVersion.add(id, crdt.counter);
+		} else {
+			vectorVersion.increment(id);
+		}
 
 		System.out.println(vectorVersion.toString());
 		BroadcastPacket packet = new BroadcastPacket(id,c,'i',position);
@@ -91,39 +98,62 @@ public class Controller {
 	public static void insertRemote(BroadcastPacket packet){
 		System.out.println(packet);
 		crdt.insert(packet.getId(),packet.getValue(),packet.getPosition());
+		HashMap<String, Integer> v = new HashMap<>();
 
-		VersionVectorPacket v = new VersionVectorPacket(id, packet.getValue(), 'i', crdt.counter);
-		vectorVersion.add(v);
+		v = vectorVersion.getVersion();
+
+		if (v.get(id) == null){
+			vectorVersion.add(packet.getId(), crdt.counter);
+		} else {
+			vectorVersion.increment(packet.getId());
+		}
 
 		updateTextEditor();
 		printDocument();
 	}
+
 	public static void deleteLocal(int idx) throws IOException{
 		Character c = crdt.get(idx);
-		DeletionBufferPacket d = new DeletionBufferPacket(id, c.getValue(), crdt.counter, c.getPosition());
-		delBuffer.add(d);
+		crdt.delete(idx);
+		BroadcastPacket packet = new BroadcastPacket(c.getSiteId(),c.getValue(),'d',c.getPosition());
+		HashMap<String, Integer> v = new HashMap<>();
+		v = vectorVersion.getVersion();
 
-//		crdt.delete(idx);
-//		BroadcastPacket packet = new BroadcastPacket(id,c.getValue(),'d',c.getPosition());
-//		System.out.println(packet);
-//		broadcast(packet);
-//		System.out.println(packet);
-//		printDocument();
+		if (v.get(id) == null){
+			vectorVersion.add(id, crdt.counter);
+		} else {
+			vectorVersion.increment(id);
+		}
+		broadcast(packet);
+
+		printDocument();
 	}
 
 	public static void deleteRemote(BroadcastPacket packet){
 		System.out.println(packet);
-		DeletionBufferPacket d = new DeletionBufferPacket(id, packet.getValue(), crdt.counter, packet.getPosition());
-		delBuffer.add(d);
-//		int idx = crdt.find(packet.getPosition());
-//		System.out.println(idx);
-//		crdt.delete(idx);
-//		updateTextEditor();
-//		printDocument();
-	}
+		if (vectorVersion.getCounter(packet.getId()) < crdt.counter){
+			DeletionBufferPacket d = new DeletionBufferPacket(id, packet.getValue(), crdt.counter, packet.getPosition());
+			delBuffer.add(d);
 
-	public void deleteCRDT(){
+//			wait for insert and then delete
+		} else {
+			// hehehe
+		}
+		int idx = crdt.find(packet.getPosition());
+		System.out.println(idx);
+		crdt.delete(idx);
 
+		HashMap<String, Integer> v = new HashMap<>();
+		v = vectorVersion.getVersion();
+
+		if (v.get(id) == null){
+			vectorVersion.add(packet.getId(), crdt.counter);
+		} else {
+			vectorVersion.increment(packet.getId());
+		}
+
+		updateTextEditor();
+		printDocument();
 	}
 
 	public static void printDocument(){

@@ -1,47 +1,32 @@
 package com.company;
 
+import java.util.HashMap;
+
 public class VersionVectorPacket {
-    private String id;
-    private char value;
-    private char op;
-    private int counter;
+    private HashMap<String, Integer> version;
 
-    public VersionVectorPacket(String id, char value, char op, int counter){
-        this.id = id;
-        this.value = value;
-        this.op = op;
-        this.counter = counter;
+    public VersionVectorPacket(){
+        this.version = new HashMap<>();
     }
 
-    public char getValue(){
-        return this.value;
+    public HashMap<String, Integer> getVersion() {
+        return version;
     }
 
-    public char getOp(){
-        return this.op;
+    public void setVersion(HashMap<String, Integer> version) {
+        this.version = version;
     }
 
-    public String getId() {
-        return id;
+    public void add(String id, int counter){
+        version.put(id, counter);
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public int getCounter(String id){
+        return this.version.get(id);
     }
 
-    public int getCounter(){
-        return this.counter;
+    public void increment(String id){
+        this.version.put(id, this.version.get(id) + 1);
     }
 
-    public void setValue(char value){
-        this.value= value;
-    }
-
-    public void setOp(char op){
-        this.op = op;
-    }
-
-    public void setCounter(int counter){
-        this.counter = counter;
-    }
 }

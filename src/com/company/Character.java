@@ -30,6 +30,10 @@ public class Character {
 		return position;
 	}
 
+	public String getSiteId() {
+		return siteId;
+	}
+
 	public void setPosition(ArrayList<Integer> position) {
 		this.position = position;
 	}
