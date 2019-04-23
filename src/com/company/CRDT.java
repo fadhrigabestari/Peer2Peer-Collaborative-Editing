@@ -3,8 +3,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import static java.lang.Math.round;
-
 public class CRDT {
 
 
@@ -36,6 +34,7 @@ public class CRDT {
 //				break;
 //			}
 //		}
+		counter++;
 		document.remove(idx);
 	}
 	public void update(){}
