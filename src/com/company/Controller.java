@@ -102,7 +102,7 @@ public class Controller {
 
 		v = vectorVersion.getVersion();
 
-		if (v.get(id) == null){
+		if (v.get(packet.getId()) == null){
 			vectorVersion.add(packet.getId(), crdt.counter);
 		} else {
 			vectorVersion.increment(packet.getId());
