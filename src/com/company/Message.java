@@ -26,6 +26,7 @@ public class Message implements Runnable {
 			try {
 				ObjectInputStream iStream = new ObjectInputStream(new ByteArrayInputStream(packet.getData()));
 				BroadcastPacket messageClass = (BroadcastPacket) iStream.readObject();
+				System.out.println(messageClass);
 				iStream.close();
 				if (!messageClass.getId().equals(Controller.id)) {
 					if (messageClass.getOperation() == 'i') {

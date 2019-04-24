@@ -43,27 +43,27 @@ public class TextEditor extends JPanel  {
 		public void insertUpdate(DocumentEvent e) {
 			operation = 'i';
 
-			pointer = textArea.getCaretPosition();
-			System.out.println(pointer);
-			try {
-				insertLocal(textArea.getText().charAt(pointer), pointer);
-
-			} catch (IOException err){
-				System.out.println(err);
-			}
+//			pointer = textArea.getCaretPosition();
+//			System.out.println(pointer);
+//			try {
+//				insertLocal(textArea.getText().charAt(pointer), pointer);
+//
+//			} catch (IOException err){
+//				System.out.println(err);
+//			}
 
 		}
 
 		public void removeUpdate(DocumentEvent e) {
 //			updateLog(e, "removed from" + textArea.getText().charAt(pointer - 1));
 			operation = 'd';
-			pointer = textArea.getCaretPosition();
-			System.out.println(pointer);
-			try{
-				deleteLocal(pointer - 1);
-			}catch (IOException err){
-				System.out.println(err);
-			}
+//			pointer = textArea.getCaretPosition();
+//			System.out.println(pointer);
+//			try{
+//				deleteLocal(pointer - 1);
+//			}catch (IOException err){
+//				System.out.println(err);
+//			}
 
 		}
 
@@ -84,27 +84,28 @@ public class TextEditor extends JPanel  {
 //			System.out.println(operation + " " + e.getDot());
 
 
-//			pointer = e.getDot();
+			pointer = e.getDot();
 			if(operation == 'i'){
 				int pointer = e.getDot() - 1;
 				if(e.getDot() != 0) {
-//					try {
-//						System.out.println("ins");
-//						insertLocal(textArea.getText().charAt(pointer), pointer);
-//						operation = ' ';
-//					} catch (IOException err){
-//						System.out.println(err);
-//					}
+					try {
+						System.out.println("ins");
+						insertLocal(textArea.getText().charAt(pointer), pointer);
+
+					} catch (IOException err){
+						System.out.println(err);
+					}
 				}
 
 			}else if(operation == 'd'){
 				int pointer = e.getDot();
 //				System.out.println(pointer);
+				try{
+					deleteLocal(pointer);
+				}catch (IOException err){
+					System.out.println(err);
+				}
 //				try{
-//					deleteLocal(pointer);
-//				}catch (IOException err){
-//					System.out.println(err);
-//				}try{
 //					deleteLocal(pointer);
 //				}catch (IOException err){
 //					System.out.println(err);
@@ -112,7 +113,7 @@ public class TextEditor extends JPanel  {
 
 				operation = ' ';
 			}
-
+			operation = ' ';
 
 
 		}
