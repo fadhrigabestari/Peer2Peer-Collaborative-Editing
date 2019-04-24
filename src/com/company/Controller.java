@@ -1,6 +1,5 @@
 package com.company;
 
-import java.awt.image.AreaAveragingScaleFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,7 +26,6 @@ public class Controller {
 
 	public static void insertLocal(char c, int index) throws IOException {
 		ArrayList<Integer> position = createPosition(index);
-		System.out.println(position);
 		crdt.insert(id,c,position);
 
 		HashMap<String, Integer> v = new HashMap<>();
@@ -39,7 +37,6 @@ public class Controller {
 			vectorVersion.increment(id);
 		}
 
-		System.out.println(vectorVersion.toString());
 		BroadcastPacket packet = new BroadcastPacket(id, id, c,'i',position, crdt.counter, crdt.counter);
 		broadcast(packet);
 		printDocument();
@@ -49,7 +46,6 @@ public class Controller {
 		crdt.sort();
 		ArrayList<Integer> position = new ArrayList<>();
 		if(index == 0){
-//			System.out.println("first");
 			if(crdt.getDocument().size() == 0){
 				position.add(1);
 			}else{
@@ -96,7 +92,6 @@ public class Controller {
 	}
 
 	public static void insertRemote(BroadcastPacket packet){
-		System.out.println(packet);
 		crdt.insert(packet.getId(),packet.getValue(),packet.getPosition());
 		HashMap<String, Integer> v;
 
@@ -145,7 +140,6 @@ public class Controller {
 	}
 
 	public static void deleteRemote(BroadcastPacket packet){
-		System.out.println(packet);
 		HashMap<String, Integer> v = vectorVersion.getVersion();
 		Character character = new Character(packet.getSiteId(), packet.getValue(), packet.getCounter(), packet.getPosition());
 
@@ -154,7 +148,6 @@ public class Controller {
 			delBuffer.add(d);
 		} else {
 			int idx = crdt.find(packet.getPosition());
-			System.out.println(idx);
 			crdt.delete(idx);
 
 			if (v.get(id) == null){

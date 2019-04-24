@@ -36,6 +36,7 @@ public class TextEditor extends JPanel  {
 			text += document.get(i).getValue();
 		}
 		textArea.setText(text);
+		textArea.setCaretPosition(pointer);
 	}
 	class MyDocumentListener implements DocumentListener {
 		final String newline = "\n";
@@ -86,23 +87,21 @@ public class TextEditor extends JPanel  {
 
 			pointer = e.getDot();
 			if(operation == 'i'){
-				int pointer = e.getDot() - 1;
+				int p = e.getDot() - 1;
 				if(e.getDot() != 0) {
 					try {
-						System.out.println("ins");
-						insertLocal(textArea.getText().charAt(pointer), pointer);
-
+						insertLocal(textArea.getText().charAt(p), p);
 					} catch (IOException err){
 						System.out.println(err);
 					}
 				}
 
-			}else if(operation == 'd'){
-				int pointer = e.getDot();
+			}else if(operation == 'd') {
+				int p = e.getDot();
 //				System.out.println(pointer);
-				try{
-					deleteLocal(pointer);
-				}catch (IOException err){
+				try {
+					deleteLocal(p);
+				} catch (IOException err) {
 					System.out.println(err);
 				}
 //				try{
@@ -110,13 +109,11 @@ public class TextEditor extends JPanel  {
 //				}catch (IOException err){
 //					System.out.println(err);
 //				}
-
 				operation = ' ';
 			}
 			operation = ' ';
-
-
 		}
+
 	}
 
 }
