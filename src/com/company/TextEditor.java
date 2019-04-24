@@ -36,6 +36,7 @@ public class TextEditor extends JPanel  {
 			text += document.get(i).getValue();
 		}
 		textArea.setText(text);
+		operation = ' ';
 	}
 	class MyDocumentListener implements DocumentListener {
 		final String newline = "\n";
