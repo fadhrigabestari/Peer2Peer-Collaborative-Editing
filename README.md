@@ -3,8 +3,7 @@
 ## Petunjuk Penggunaan Program
 Jalankan *command* berikut di terminal anda
 ```
-make
-./peer2peer
+java -jar peer2peer-collaborative-editing.jar
 ```
 
 ## Pembagian Tugas
