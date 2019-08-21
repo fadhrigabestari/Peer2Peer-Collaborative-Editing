@@ -27,8 +27,7 @@ Karena paket yang dikirimkan berbentuk *byte*, maka perlu di*convert* kembali me
 ![Arsitektur Program](peer2peer.png)
 
 ### CRDT, Version Vector, dan Deletion Buffer
-- CRDT
-<br>
+#### CRDT
 CRDT mempunyai fungsi utama insert, delete, dan sort. Ketika CRDT
 memanggil ketiga fungsi tersebut, maka counter dari CRDT akan di 
 *incerement* dan diupdate. Fungsi dari *insert* ialah untuk menyisipkan 
@@ -39,19 +38,18 @@ menghapus karakter dari *Array List* yang nantinya akan dihapus juga
 dari Text Editor. Fungsi *sort* pada CRDT untuk melakukan *sort* karakter 
 pada *Array List* agar tercetak sesuai posisi di Text Editor. 
 
-- Version Vector 
-<br>
+#### Version Vector 
 Kelas Version Vector berfungsi untuk menyimpan counter setiap siteID.
 Kelas Version Vector ini menyimpan HashMap untuk menyimpan counter dan siteID.
 Counter dari setiap siteID akan di*update* ketika dia menerima paket 
 dari siteID lain dan siteID nya sendiri akan di*update* ketika dia sendiri melakukan
 *insert* atau *update*.
 
-- Deletion Buffer
-<br>
+#### Deletion Buffer
 Fungsi deletion buffer dipakai pada kelas *Controller* untuk menyimpan 
 karakter yang di*delete* ketika counter karakter yang di delete lebih
 besar. Counter tersebut di cek pada version vector.
+
 ### Analisis
 Menurut kami, program yang kami buat sudah cukup baik untuk melakukan
 *peer to peer collaborative editing*. Program kami mampu menangani
